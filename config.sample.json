@@ -1,0 +1,4 @@
+{
+    "masterKey": "owo",
+    "postgresUrl": "postgresql://postgres:098zxc@localhost:5432/task-manager-api"
+}
