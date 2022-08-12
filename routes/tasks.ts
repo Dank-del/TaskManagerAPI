@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { getTask, markAsDone, newTask } from "../database/methods"
+import { fetchAllTasks, getTask, markAsDone, newTask } from "../database/methods"
 import { IsAuthenticUser, IsTaskValid, IsUserAssigned, UserExists } from "../utils/validation"
 
 export async function addTask(req: Request, res: Response) {
@@ -9,8 +9,8 @@ export async function addTask(req: Request, res: Response) {
     const assignTo = req.body.assignTo
 
     if (taskText === undefined || username === undefined || password === undefined || assignTo === undefined) {
-        res.status(404).json({
-            "message": "bad request"
+        res.status(403).json({
+            "message": "forbidden"
         })
         return
     }
@@ -22,8 +22,8 @@ export async function addTask(req: Request, res: Response) {
         return res.json(task.toJSON());
     }
 
-    return res.json(404).json({
-        "message": "access forbidden"
+    return res.status(401).json({
+        "message": "access denied"
     })
 }
 
@@ -41,7 +41,7 @@ export async function markTaskAsDone(req: Request, res: Response) {
 
     const realUser = await IsAuthenticUser(username, password)
     if (!realUser) {
-        res.status(404).json({
+        res.status(401).json({
             "message": "access denied"
         })
     }
@@ -67,4 +67,31 @@ export async function markTaskAsDone(req: Request, res: Response) {
         "task": await getTask(taskId)
     })
     
+}
+
+export async function getAllTasks(req: Request, res: Response) {
+    const username = req.body.username 
+    const password = req.body.password 
+
+    if (username === undefined || password === undefined) {
+        res.status(403).json({
+            "message": "forbidden"
+        })
+        return
+    }
+
+    const realUser = await IsAuthenticUser(username, password)
+    if (!realUser) {
+        res.status(401).json({
+            "message": "access denied"
+        })
+    }
+
+    const tasks = await fetchAllTasks();
+    const jsonResponse = [];
+    tasks.map((value) => {
+        jsonResponse.push(value.toJSON())
+    });
+    
+    return res.status(200).json(jsonResponse);
 }

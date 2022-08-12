@@ -52,3 +52,7 @@ export async function markAsDone(taskId: string) {
         where: { taskId: taskId }
     })
 }
+
+export async function fetchAllTasks() {
+    return await Tasks.findAll();
+}

@@ -7,8 +7,9 @@
 - Add a user by master key
 - Add a task
 - Mark a task as done
+- Fetch all tasks
 
 ## What is left
 
 - Comments
-- Fetch all tasks
+- ~~Fetch all tasks~~
