@@ -11,9 +11,9 @@ export async function getUser(username: string) {
     return await User.findByPk(username.toLowerCase());
 }
 
-export async function addComment(taskId: string, userId: string, text: string, img: string, location: string) {
+export async function addCommentToTask(taskId: string, userId: string, text: string, img?: string, location?: string) {
     const cmtId = uuidv4.toString();
-    await Comments.create({
+    const comment = await Comments.create({
         commentId: cmtId,
         textContent: text,
         image: img,
@@ -25,6 +25,7 @@ export async function addComment(taskId: string, userId: string, text: string, i
     await Tasks.update({
         commentIds: task.commentIds.push(cmtId)
     }, { where: { taskId: taskId } })
+    return comment;
 }
 
 export async function newTask(creatorUsername: string, text: string, assignToUsername: string) {
