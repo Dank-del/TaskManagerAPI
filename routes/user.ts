@@ -17,7 +17,7 @@ export async function addUser(req: Request, res: Response) {
         const user = await getUser(username);
         // console.log(user);
         // console.log(user != undefined);
-        if (user.username !== undefined || user !== null) {
+        if (user !== null) {
             return res.status(200).json({
                 "message": "user already exists",
                 "user": user.toJSON()
