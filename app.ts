@@ -3,12 +3,11 @@ import { sequelizeClient } from './database/client';
 import { addUser } from './routes/user';
 import bodyParser from 'body-parser';
 import { addTask, getAllTasks } from './routes/tasks';
+import config from './config.json';
 
 const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-
-const port = 3000;
 
 sequelizeClient.sync().then(() => { 
     console.log("Synced Database") 
@@ -22,6 +21,6 @@ app.post('/adduser', addUser);
 app.post('/addtask', addTask);
 app.post('/alltasks', getAllTasks);
 
-app.listen(port, () => {
-    return console.log(`Express is listening at http://localhost:${port}`);
+app.listen(config.port, () => {
+    return console.log(`Express is listening at http://localhost:${config.port}`);
 });
