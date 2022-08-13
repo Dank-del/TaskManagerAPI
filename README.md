@@ -8,8 +8,9 @@
 - Add a task
 - Mark a task as done
 - Fetch all tasks
+- Comments
 
 ## What is left
 
-- Comments
+- ~~Comments~~
 - ~~Fetch all tasks~~
