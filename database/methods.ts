@@ -1,9 +1,17 @@
 import { Comments, User, Tasks } from "./models";
 import { v4 as uuidv4 } from 'uuid';
+import { genSalt, hash } from 'bcrypt';
 
-export function newUser(username: string, password: string) {
-    User.create({ username: username.toLowerCase(), password: password }).then(() => {
-        console.log(`Created new user with username ${username} and password ${password}`)
+async function hashIt(password: string):Promise<string> {
+    const salt = await genSalt(6);
+    const hashed = await hash(password, salt);
+    return hashed;
+  }
+
+export async function newUser(username: string, password: string) {
+    const hashedPassword = await hashIt(password);
+    User.create({ username: username.toLowerCase(), password: hashedPassword }).then(() => {
+        console.log(`Created new user with username ${username} and password ${hashedPassword}`)
     }).catch((err) => { console.log(`Encountered an error ${err}`) })
 }
 

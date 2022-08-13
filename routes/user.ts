@@ -26,7 +26,7 @@ export async function addUser(req: Request, res: Response) {
             // newUser(username, password);
             
         }
-        newUser(username, password);
+        await newUser(username, password);
         return res.status(200).json({
             "message": "successfully created user",
             "username": username,

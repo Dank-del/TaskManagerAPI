@@ -1,15 +1,18 @@
 import { getUser } from "../database/methods";
 import { Tasks } from "../database/models";
+import { compare } from "bcrypt";
 
 export async function IsAuthenticUser(username: string, password: string): Promise<boolean> {
-    const user = await getUser(username)
-    if (user === null || user === undefined || user.password !== password) {
+    const user = await getUser(username);
+    if (user === null || user === undefined) {
         return false;
     }
-    if (user.password === password) {
-        return true
+    const isCorrectPassword = await compare(password, user.password);
+    // console.log(isCorrectPassword)
+    if (isCorrectPassword) {
+        return true;
     }
-    return false
+    return false;
 }
 
 export async function UserExists(username: string): Promise<boolean> {
