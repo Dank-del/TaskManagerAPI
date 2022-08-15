@@ -22,7 +22,7 @@ export async function addTask(req: Request, res: Response) {
         return res.json(task.toJSON());
     }
 
-    return res.status(401).json({
+    res.status(401).json({
         "message": "access denied"
     })
 }
@@ -44,13 +44,15 @@ export async function markTaskAsDone(req: Request, res: Response) {
         res.status(401).json({
             "message": "access denied"
         })
+        return
     }
 
     const taskValid = await IsTaskValid(taskId)
     if (!taskValid) {
-        return res.status(404).json({
+        res.status(404).json({
             "message": "invalid task id"
         })
+        return
     }
 
     const isAssigned = await IsUserAssigned(taskId, username)
@@ -85,6 +87,7 @@ export async function getAllTasks(req: Request, res: Response) {
         res.status(401).json({
             "message": "access denied"
         })
+        return
     }
 
     const tasks = await fetchAllTasks();

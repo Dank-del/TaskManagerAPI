@@ -5,8 +5,10 @@ import bodyParser from 'body-parser';
 import { addTask, getAllTasks } from './routes/tasks';
 import { addComment } from './routes/comments';
 import config from './config.json';
+import cors from 'cors';
 
 const app = express();
+app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
