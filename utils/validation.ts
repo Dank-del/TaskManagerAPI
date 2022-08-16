@@ -38,3 +38,7 @@ export async function IsUserAssigned(taskId: string, username: string): Promise<
     })
     return task.assignedToUsername == username.toLowerCase()
 }
+
+export function IsEmpty(obj: string): boolean {
+    return (obj === undefined || obj === null || obj === "")
+}

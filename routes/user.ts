@@ -1,13 +1,14 @@
 import { Request, Response } from "express"
 import { newUser, getUser } from "../database/methods";
 import config from "../config.json"
+import { IsEmpty } from "../utils/validation";
 
 export async function addUser(req: Request, res: Response) {
     const key = req.body.key;
     const username = req.body.username;
     const password = req.body.password;
     
-    if (key === undefined || username === undefined || password === undefined) {
+    if (IsEmpty(key) || IsEmpty(username) ||IsEmpty(username)) {
         res.status(404).json({
             "message": "bad request"
         })

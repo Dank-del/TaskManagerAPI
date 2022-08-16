@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { addCommentToTask } from "../database/methods";
-import { IsAuthenticUser, IsTaskValid } from "../utils/validation";
+import { IsAuthenticUser, IsEmpty, IsTaskValid } from "../utils/validation";
 
 export async function addComment(req: Request, res: Response) {
     const username = req.body.username;
@@ -10,7 +10,7 @@ export async function addComment(req: Request, res: Response) {
     const img = req.body.img;
     const location = req.body.location;
 
-    if (username === undefined || password === undefined || taskId === undefined || comment === undefined) {
+    if (IsEmpty(username) || IsEmpty(password) || IsEmpty(taskId) || IsEmpty(comment)) {
         res.status(404).json({
             "message": "bad request"
         })

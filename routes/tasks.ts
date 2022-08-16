@@ -1,14 +1,14 @@
 import { Request, Response } from "express"
 import { fetchAllTasks, getTask, markAsDone, newTask } from "../database/methods"
-import { IsAuthenticUser, IsTaskValid, IsUserAssigned, UserExists } from "../utils/validation"
+import { IsAuthenticUser, IsEmpty, IsTaskValid, IsUserAssigned, UserExists } from "../utils/validation"
 
 export async function addTask(req: Request, res: Response) {
-    const username = req.body.username 
-    const password = req.body.password 
-    const taskText = req.body.taskText 
+    const username = req.body.username
+    const password = req.body.password
+    const taskText = req.body.taskText
     const assignTo = req.body.assignTo
 
-    if (taskText === undefined || username === undefined || password === undefined || assignTo === undefined) {
+    if (IsEmpty(taskText) || IsEmpty(username) || IsEmpty(password) || IsEmpty(assignTo)) {
         res.status(403).json({
             "message": "forbidden"
         })
@@ -28,11 +28,11 @@ export async function addTask(req: Request, res: Response) {
 }
 
 export async function markTaskAsDone(req: Request, res: Response) {
-    const username = req.body.username 
-    const password = req.body.password 
+    const username = req.body.username
+    const password = req.body.password
     const taskId = req.body.taskId
 
-    if (taskId === undefined || username === undefined || password === undefined) {
+    if (IsEmpty(username) || IsEmpty(password) || IsEmpty(taskId)) {
         res.status(404).json({
             "message": "bad request"
         })
@@ -62,20 +62,20 @@ export async function markTaskAsDone(req: Request, res: Response) {
             "task": await getTask(taskId)
         })
     }
-    
+
     await markAsDone(taskId)
     return res.status(200).json({
         "message": "marked as complete",
         "task": await getTask(taskId)
     })
-    
+
 }
 
 export async function getAllTasks(req: Request, res: Response) {
-    const username = req.body.username 
-    const password = req.body.password 
+    const username = req.body.username
+    const password = req.body.password
 
-    if (username === undefined || password === undefined) {
+    if (IsEmpty(username) || IsEmpty(password)) {
         res.status(403).json({
             "message": "forbidden"
         })
@@ -95,6 +95,6 @@ export async function getAllTasks(req: Request, res: Response) {
     tasks.map((value) => {
         jsonResponse.push(value.toJSON())
     });
-    
+
     return res.status(200).json(jsonResponse);
 }
