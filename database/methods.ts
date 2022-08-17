@@ -20,7 +20,7 @@ export async function getUser(username: string) {
 }
 
 export async function addCommentToTask(taskId: string, userId: string, text: string, img?: string, location?: string) {
-    const cmtId = uuidv4.toString();
+    const cmtId = uuidv4().toString();
     const comment = await Comments.create({
         commentId: cmtId,
         textContent: text,
@@ -30,8 +30,13 @@ export async function addCommentToTask(taskId: string, userId: string, text: str
         commentedAt: new Date()
     });
     const task = await Tasks.findOne({ where: { taskId: taskId } })
+    if (task.commentIds == null){
+        task.commentIds = [cmtId];
+    } else {
+        task.commentIds.push(cmtId);
+    }
     await Tasks.update({
-        commentIds: task.commentIds.push(cmtId)
+        commentIds: task.commentIds
     }, { where: { taskId: taskId } })
     return comment;
 }
