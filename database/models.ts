@@ -15,6 +15,9 @@ export class Comments extends Model {
    commentId: string
 
    @Column
+   commentWriter: string
+
+   @Column
    image: string
 
    @Column(DataType.TEXT)
