@@ -32,7 +32,7 @@ export async function getTaskById(req: Request, res: Response) {
     const taskId = req.body.taskId
     const username = req.body.username
     const password = req.body.password
-    console.log(req.body);
+    // console.log(req.body);
     if (IsEmpty(taskId) || IsEmpty(username) || IsEmpty(password)) {
         res.status(403).json({
             "message": "forbidden"
