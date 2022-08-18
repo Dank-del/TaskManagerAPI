@@ -27,6 +27,30 @@ export async function addTask(req: Request, res: Response) {
     })
 }
 
+// a route to get task by task id
+export async function getTaskById(req: Request, res: Response) {
+    const taskId = req.body.taskId
+    const username = req.body.username
+    const password = req.body.password
+    console.log(req.body);
+    if (IsEmpty(taskId) || IsEmpty(username) || IsEmpty(password)) {
+        res.status(403).json({
+            "message": "forbidden"
+        })
+        return
+    }
+    const realUser = await IsAuthenticUser(username, password)
+    const task = await getTask(taskId);
+    if (realUser && task !== null) {
+        return res.json(task.toJSON());
+    }
+
+    res.status(401).json({
+        "message": "access denied"
+    })
+}
+
+
 export async function markTaskAsDone(req: Request, res: Response) {
     const username = req.body.username
     const password = req.body.password

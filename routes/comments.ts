@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { addCommentToTask } from "../database/methods";
+import { addCommentToTask, fetchComment } from "../database/methods";
 import { IsAuthenticUser, IsEmpty, IsTaskValid } from "../utils/validation";
 
 export async function addComment(req: Request, res: Response) {
@@ -33,5 +33,37 @@ export async function addComment(req: Request, res: Response) {
         return
     }
     const cmt = await addCommentToTask(taskId, username, comment, img, location);
+    return res.status(200).json(cmt.toJSON())
+}
+
+  //  get comment by id
+export async function getComment(req: Request, res: Response) {
+    const username = req.body.username;
+    const password = req.body.password;
+    const commentId = req.body.commentId;
+
+    if (IsEmpty(username) || IsEmpty(password) || IsEmpty(commentId)) {
+        res.status(404).json({
+            "message": "bad request"
+        })
+        return
+    }
+
+    const isUserValid = await IsAuthenticUser(username, password);
+    if (!isUserValid) {
+        res.status(401).json({
+            "message": "invalid credentials"
+        })
+        return
+    }
+
+    const cmt = await fetchComment(commentId);
+    if (cmt == null) {
+        res.status(404).json({
+            "message": "comment not found"
+        })
+        return
+    }
+    
     return res.status(200).json(cmt.toJSON())
 }

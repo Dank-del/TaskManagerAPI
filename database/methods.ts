@@ -2,11 +2,11 @@ import { Comments, User, Tasks } from "./models";
 import { v4 as uuidv4 } from 'uuid';
 import { genSalt, hash } from 'bcrypt';
 
-async function hashIt(password: string):Promise<string> {
+async function hashIt(password: string): Promise<string> {
     const salt = await genSalt(6);
     const hashed = await hash(password, salt);
     return hashed;
-  }
+}
 
 export async function newUser(username: string, password: string) {
     const hashedPassword = await hashIt(password);
@@ -30,7 +30,7 @@ export async function addCommentToTask(taskId: string, userId: string, text: str
         commentedAt: new Date()
     });
     const task = await Tasks.findOne({ where: { taskId: taskId } })
-    if (task.commentIds == null){
+    if (task.commentIds == null) {
         task.commentIds = [cmtId];
     } else {
         task.commentIds.push(cmtId);
@@ -51,12 +51,17 @@ export async function newTask(creatorUsername: string, text: string, assignToUse
     })
 }
 
+export async function fetchComment(commentId: string) {
+    return await Comments.findByPk(commentId);
+}
+
 export async function getTask(taskId: string) {
-    return await Tasks.findOne({
+    const task = await Tasks.findOne({
         where: {
             taskId: taskId
         }
     })
+    return task;
 }
 
 export async function markAsDone(taskId: string) {
